@@ -1,0 +1,202 @@
+---
+title: "Dallas Bond Propositions"
+toc: FALSE
+---
+
+```{r, Import all Data and Libraries}
+#| include: FALSE
+
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(cpaltemplates)
+library(highcharter)
+library(DT)
+library(scales)
+
+##### Import Data #####
+# Proposed Bond Projects
+bonds_sf <- st_read("data/City of Dallas Proposed 2024 Bond Projects.geojson") %>%
+  mutate(Council = ifelse(str_detect(Council, ","), "Multiple Districts", Council),
+         Council = ifelse(Council %in% c("CW", "Multiple Districts"), Council, paste("CD", Council)))
+
+# City Council Boundaries
+council <- st_read("data/City of Dallas - City Council Boundaries.geojson") %>%
+  st_transform(crs = 4326)
+
+# SMU Infrastructure Deserts
+smu_deserts <- st_read("data/SMU Infrastructure Deserts in City of Dallas.geojson")
+
+##### Calculations #####
+# find bond projects within infrastructure deserts
+bonds_inf <- st_join(bonds_sf, smu_deserts) %>%
+  mutate(INFDES_FLAG = ifelse(is.na(IF_5), FALSE, TRUE)) %>%
+  select(-BLOCKGROUP, -IF_5)
+
+# calculate total projects and amount being spent in infrastructure deserts in the City of Dallas
+bonds_tbl <- bonds_inf %>%
+  st_drop_geometry() %>%
+  group_by(Council, INFDES_FLAG) %>%
+  summarize(count = n(),
+            amount = sum(BondAmount2024)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = INFDES_FLAG,
+              values_from = c(count, amount),
+              values_fill = 0) %>%
+  mutate(total_projects = count_FALSE+count_TRUE,
+         total_amount = amount_FALSE+amount_TRUE,
+         per_desert = count_TRUE/total_projects,
+         amt_desert = amount_TRUE/total_amount) %>%
+  select(Council,
+         count_TRUE,
+         total_projects,
+         per_desert,
+         amount_TRUE,
+         total_amount,
+         amt_desert
+  ) %>%
+  rename(desert_projects = 2,
+         desert_amount = 5)
+
+# find out how many infrastructure deserts are in each council district
+deserts_tbl <- smu_deserts %>%
+  st_centroid() %>%
+  st_join(., council) %>%
+  st_drop_geometry() %>%
+  mutate(Council = paste("CD", COUNCIL)) %>%
+  group_by(Council) %>%
+  summarize(INF_DESERTS = n())
+
+# join all data together
+infra_tbl <- left_join(bonds_tbl, deserts_tbl) %>%
+  mutate(INF_DESERTS = ifelse(Council == "CD 14" & is.na(INF_DESERTS), 0, INF_DESERTS))
+
+# just the number
+num_totdollars <- scales::dollar(sum(st_drop_geometry(bonds_tbl$total_amount)))
+
+num_desdollars <- scales::dollar(sum(st_drop_geometry(bonds_tbl$desert_amount)))
+
+num_perdes <- scales::percent(sum(st_drop_geometry(bonds_tbl$desert_amount))/sum(st_drop_geometry(bonds_tbl$total_amount)))
+```
+
+Place based projects from the 2024 Bond Package are estimated to be **$1.25 Billion Dollars**, of those just under **$125 Million Dollars** is allocated to locations described as 'Highly Deficient' infrastructure deserts from the 2022 SMU analysis making up about `r num_perdes` of all funds from the bond package. 
+By City Council District, only districts **4, 5, and 8** have allocated more than 30% of their bond dollars to projects located within an infrastructure desert. All remaining council districts have allocated less than 15% or less of funds to areas deemed infrastructure deserts.
+
+```{r, Bar Chart}
+# Sort data based on 'amt_desert'
+chart_tbl <- infra_tbl %>% 
+  arrange(desc(amt_desert)) %>%
+  mutate(amt_desert = round(amt_desert * 100, digits = 1),
+         Council = str_remove(Council, "CD "),
+         Council = str_replace(Council, "Multiple Districts", "Multiple"),
+         total_format = paste0(as.integer(round((total_amount/1e6)*1e6)/1e6), "M"))
+
+# Create the Highchart
+infra_chrt <- highchart() %>%
+  # Add a bar chart for 'total_amount'
+  hc_add_series(chart_tbl, "column", hcaes(x = Council, y = total_amount), yAxis = 1, 
+                name = "Total Bond Dollars ($M)",
+                dataLabels = list(enabled = TRUE, 
+                                  format = '{point.total_format}', 
+                                  align = 'center', 
+                                  verticalAlign = 'top', 
+                                  y = -30),
+                color = palette_cpal_main[1]) %>%
+  # Add a line chart for 'amt_desert'
+  hc_add_series(chart_tbl, "line", hcaes(x = Council, y = amt_desert), 
+                name = "Dollars in Infrastructure Deserts (%)",
+                color = palette_cpal_main[2]) %>%
+  # Primary x-axis (shared)
+  hc_xAxis(categories = chart_tbl$Council, title = list(text = "City Council")) %>%
+  # Primary y-axis for 'amt_desert' as a line chart
+  hc_yAxis_multiples(
+    list(title = list(text = "Dollars in Infrastructure Deserts (%)"), min = 0, max = 100, labels = list(format = "{value}%")),
+    list(title = list(text = "Total Bond Dollars ($)"), min = 0, opposite = TRUE)
+  ) %>%
+  # Specific tooltip settings for the line chart
+  hc_tooltip(shared = FALSE, 
+             formatter = JS("function() { return this.series.name + ': ' + this.y + '%'; }")) %>%
+  # Chart and Axis Titles
+  hc_title(text = "Infrastructure Deserts vs 2024 Bond Project Investments") %>%
+#  hc_subtitle(text = "Combining Bar and Line Charts") %>%
+  hc_legend(enabled = TRUE) # Enable legend to differentiate series
+
+infra_chrt
+```
+
+{{< pagebreak >}}
+
+```{r, Table of Data}
+# Ensure the data transformation and factor setting is done correctly
+dt_data <- chart_tbl %>%
+  mutate(Council = factor(Council,
+                          levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+                                     "13", "14", "Multiple", "CW"),
+                          ordered = TRUE)) %>%
+  select(Council, total_projects, total_amount, desert_amount, per_desert, INF_DESERTS) %>%
+  transmute(
+    `City Council` = Council,
+    `Bond Projects` = total_projects,
+    `Total Dollars` = dollar(total_amount),
+    `Dollars in Infrastructure Deserts` = dollar(desert_amount),
+    `Dollars in Infrastructure Deserts (%)` = percent(per_desert, accuracy = 0.1),  # Correct percentage formatting
+    `Infrastructure Deserts` = INF_DESERTS
+  )
+
+# Create a DT datatable with all entries shown and some features disabled
+datatable(dt_data, 
+          options = list(pageLength = nrow(dt_data),  # Show all rows
+                         paging = FALSE,             # Disable pagination
+                         searching = FALSE,          # Disable search box
+                         info = FALSE,               # Hide the 'Showing 1 to n of n entries' information
+                         autoWidth = TRUE), 
+          rownames = FALSE)
+```
+
+{{< pagebreak >}}
+
+## City of Dallas Bond Projects
+
+The map displays proposed projects for the 2024 bond, categorized by program type. It also shows census blocks within the City of Dallas that were identified as infrastructure deserts in the 2022 analysis conducted by SMU.
+
+```{r, Leaflet Map Output}
+#| height: "120%"
+# Generate the map
+leaflet(data = bonds_sf) %>%
+  addTiles(urlTemplate = cpaltemplates::cpal_mapbox_color,
+           attribution = cpaltemplates::cpal_leaflet) %>%
+  addPolygons(data = council,
+              label = ~paste("Council District:", COUNCIL),
+              labelOptions = labelOptions(
+                style = list("font-weight" = "bold", "font-size" = "14px", "color" = "#000000"),
+                direction = "auto",
+                noHide = F,   # Labels will hide when not hovered over; set to T for always visible
+                offset = c(0,0)  # Adjusts label position; x,y where positive y moves down, positive x moves right
+              ),
+              fillColor = cpaltemplates::palette_cpal_main[1],
+              fillOpacity = 0,
+              opacity = 1,
+              color = "#000000",
+              weight = 3
+               ) %>%
+  addPolygons(data = smu_deserts,
+              fillColor = cpaltemplates::palette_cpal_main[1],
+              fillOpacity = 0.2,
+              color = "#000000",
+              weight = 1
+               ) %>%
+  addCircleMarkers(
+    fillColor = ~colorFactor(palette = palette_cpal_main, domain = bonds_sf$Program)(Program),
+    fillOpacity = 0.8,
+    color = "#000000",  # Black border for each point
+    weight = 1,  # Border thickness
+    radius = 3,  # Size of the markers
+    popup = ~paste("<b>Name:</b>", Name, "<br>", "<b>Category:</b>", Category, "<br>", "<b>Description:</b>", Description)
+  ) %>%
+  addLegend("bottomright", 
+            pal = colorFactor(palette = palette_cpal_main, domain = bonds_sf$Program), 
+            values = ~Program, 
+            title = "Program Type",
+            opacity = 1
+  )
+```

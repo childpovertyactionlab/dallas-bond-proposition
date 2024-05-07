@@ -1,0 +1,598 @@
+// cpal 0.0.2
+// Bootswatch
+
+/*-- scss:defaults --*/
+$theme: "cpal" !default;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+
+//
+// Color system
+//
+
+$white:    #FFFFFF !default;
+$gray-000: #FAFAFA !default;
+$gray-100: #ccd4d5 !default;
+$gray-200: #9bc0c6 !default;
+$gray-300: #83b6bf !default;
+$gray-400: #6aacb8 !default;
+$gray-500: #449cac !default;
+$gray-600: #2690a3 !default;
+$gray-700: #008097 !default;
+$gray-800: #006274 !default;
+$gray-900: #005160 !default;
+$black:    #2f2f2f !default;
+
+$blue:    #325d88 !default;
+$indigo:  #8338ec !default;
+$purple:  #6610f2 !default;
+$pink:    #ff006e !default;
+$red:     #971700 !default;
+$orange:  #E98816 !default;
+$yellow:  #C9AA0C !default;
+$green:   #009763 !default;
+$teal:    #008097 !default;
+$cyan:    #43bccd !default;
+
+$teal-100:       #E7F7F9 !default;
+$teal-400:       #9ADAE5 !default;
+$teal-700:       #008097 !default;
+$teal-900:       #042D33 !default;
+
+$magenta-100:    #FEEBF2 !default;
+$magenta-400:    #FFCCDC !default;
+$magenta-700:    #ED018C !default;
+$magenta-900:    #881354 !default;
+
+$rust-100:       #FFE5DE !default;
+$rust-700:       #F59A7D !default;
+$rust-900:       #ED683F !default;
+
+$mustard-100:       #FFFEE2 !default;
+$mustard-400:       #FEF6C7 !default;
+$mustard-700:       #EACA2D !default;
+$mustard-900:       #C9AA0C !default;
+
+$primary:       $teal-900 !default;
+$secondary:     $magenta-700 !default;
+$success:       $green !default;
+$info:          $mustard-400 !default;
+$warning:       $rust-900 !default;
+$danger:        $magenta-900 !default;
+$light:         $gray-200 !default;
+$dark:          $gray-800 !default;
+
+$min-contrast-ratio:   2 !default;
+
+// Body
+
+$body-bg:       $white !default;
+$body-color:    $black !default;
+$link-color:    $teal-900 !default;
+
+// Links
+
+$link-color:                $success !default;
+
+// Fonts
+
+// stylelint-disable-next-line value-keyword-case
+$font-family-sans-serif:      Inter, Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+$headings-font-weight:        600 !default;
+$font-family-monospace:       'Fira Code' !default;
+$headings-font-family:        Inter, $font-family-sans-serif !default;
+
+// Default Enable
+
+$enable-caret:                true !default;
+$enable-rounded:              true !default;
+$enable-shadows:              false !default;
+$enable-gradients:            true !default;
+$enable-transitions:          true !default;
+$enable-reduced-motion:       true !default;
+$enable-smooth-scroll:        true !default;
+$enable-grid-classes:         true !default;
+$enable-container-classes:    true !default;
+$enable-cssgrid:              true !default;
+$enable-button-pointers:      true !default;
+$enable-rfs:                  true !default;
+$enable-validation-icons:     true !default;
+$enable-negative-margins:     false !default;
+$enable-deprecation-messages: true !default;
+$enable-important-utilities:  true !default;
+
+// Dropdowns
+
+$dropdown-link-color:               $gray-600 !default;
+$dropdown-link-hover-color:         $dropdown-link-color !default;
+$dropdown-link-hover-bg:            $gray-200 !default;
+$dropdown-link-active-color:        $dropdown-link-color !default;
+$dropdown-link-active-bg:           $dropdown-link-hover-bg !default;
+
+// Navs
+
+$nav-link-padding-x:                .9rem !default;
+$nav-link-disabled-color:           $gray-300 !default;
+$nav-tabs-border-color:             $gray-300 !default;
+$nav-tabs-link-hover-border-color:  $gray-300 !default;
+$nav-tabs-link-active-bg:           $white !default;
+$nav-pills-link-active-color:       $gray-600 !default;
+$nav-pills-link-active-bg:          $gray-200 !default;
+
+// Navbar
+
+$navbar-dark-hover-color:           $white !default;
+$navbar-light-hover-color:          $black !default;
+$navbar-light-active-color:         $black !default;
+
+// Pagination
+
+$pagination-color:                  $gray-600 !default;
+$pagination-bg:                     $gray-200 !default;
+$pagination-border-color:           $gray-300 !default;
+$pagination-hover-color:            $pagination-color !default;
+$pagination-active-color:           $pagination-color !default;
+$pagination-active-bg:              $gray-300 !default;
+$pagination-active-border-color:    $gray-300 !default;
+$pagination-disabled-color:         $gray-300 !default;
+$pagination-disabled-bg:            $gray-200 !default;
+$pagination-disabled-border-color:  $pagination-border-color !default;
+
+// Cards
+
+$card-border-color:                 rgba($gray-300, .75) !default;
+$card-cap-bg:                       rgba($gray-200, .25) !default;
+
+// Popovers
+
+$popover-header-bg:                 $gray-200 !default;
+
+// Modals
+
+$modal-content-border-color:        $gray-300 !default;
+$modal-header-border-color:         $modal-content-border-color !default;
+
+// Progress bars
+
+$progress-color:                    $magenta-700 !default;
+$progress-bg:                       $gray-300 !default;
+$progress-border-radius:            10px !default;
+$progress-bar-color:                $primary !default;
+
+// List group
+
+$list-group-border-color:           $gray-300 !default;
+$list-group-hover-bg:               $gray-200 !default;
+$list-group-active-color:           $body-color !default;
+$list-group-active-bg:              $gray-200 !default;
+$list-group-active-border-color:    $gray-300 !default;
+$list-group-disabled-color:         $gray-500 !default;
+$list-group-disabled-bg:            $white !default;
+$list-group-action-color:           $list-group-active-color !default;
+$list-group-action-active-color:    $list-group-active-color !default;
+$list-group-action-active-bg:       $gray-300 !default;
+
+// Breadcrumbs
+
+$breadcrumb-padding-y:              .375rem !default;
+$breadcrumb-padding-x:              .75rem !default;
+$breadcrumb-bg:                     $pagination-bg !default;
+$breadcrumb-border-radius:          .25rem !default;
+
+// Code blocks
+$code-block-bg-alpha:               -0.8 !default;
+$code-block-bg-color:               $gray-000 !default;
+$code-color:                        $magenta-700 !default;
+$code-bg:                           $magenta-400 !default;
+
+// Close
+
+$btn-close-color:            $white !default;
+$btn-close-opacity:          .8 !default;
+$btn-close-hover-opacity:    1 !default;
+
+// Test
+div.shadecontent
+{
+    padding: 10px;
+    border-radius: 15px;
+    font-family: $font-family-sans-serif;
+    background: $gray-000;
+    border-radius: 15px;
+    -moz-border-radius: 10px;
+}
+
+.navbar-title{
+  margin-left: 1rem;
+}
+
+
+.centered {
+    display: flex;
+    justify-content: center;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    position: relative;
+    padding: 10px; /* Add more padding to the right to make space for the triangle */
+    font-weight: $headings-font-weight;
+    font-family: $headings-font-family;
+    color: #FFFFFF;
+    text-align: left;
+    background: $teal-900;
+    border-radius: 8px 10px 10px 8px;
+    -moz-border-radius: 0px;
+    vertical-align: middle;
+}
+
+h1 {
+    font-size: 50px !important;
+    width: 95%;
+    height: 80px;
+    padding-left: 80px; /* Space for block and triangle. Adjust as needed. */
+    background: none;
+    color: $teal-900;
+    font-size: 50px !important;
+
+    &::before {
+        /* Block */
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px; /* Adjust as needed */
+        height: 40px; /* Adjust as needed */
+        background: $teal-900;
+        border-radius: 5px 10px 10px 5px;
+    }
+
+    &::after {
+        /* Triangle */
+        content: '';
+        position: absolute;
+        left: 46px; /* Adjust based on block width */
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: calc(40px * .60) solid $teal-900; /* Adjust based on the height */
+        border-top: calc(40px / 2 - 2px) solid transparent;
+        border-bottom: calc(40px / 2 - 2px) solid transparent;
+    }
+}
+
+h4 {
+    width: 75%;
+    height: 100%;
+
+    &::after {
+        border-radius: 0;
+        content: '';
+        position: absolute;
+        right: -26.5px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: calc(48px * .65) solid $teal-900;
+        border-top: calc(48px / 2 - 2px) solid transparent;
+        border-bottom: calc(48px / 2 - 2px) solid transparent;
+    }
+}
+
+h2#toc-title {
+    height: auto;
+    padding: 5px;
+    padding-left: 10px;
+
+    &::after {
+        content: none;     /* Removes the ::after content, i.e., the triangle */
+    }
+}
+
+h3 {
+    width: 45%;
+    height: 100%;
+    font-size: 20px !important;
+
+    &::after {
+        border-radius: 0;
+        content: '';
+        position: absolute;
+        right: -28.5px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: calc(48px * .65) solid $teal-900;
+        border-top: calc(48px / 2 - 2px) solid transparent;
+        border-bottom: calc(48px / 2 - 2px) solid transparent;
+    }
+}
+
+h2 {
+    position: relative;
+    padding-left: 85px; /* Space for block and triangle. Adjust as needed. */
+    background: none;
+    color: $teal-900;
+    border-radius: 0;
+    border: 0 !important;
+    margin-top: 0px !important;
+    margin-bottom: 10px !important;
+
+    &::before {
+        /* Block */
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px; /* Adjust as needed */
+        height: 40px; /* Adjust as needed */
+        background: $teal-900;
+        border-radius: 5px 10px 10px 5px;
+    }
+
+    &::after {
+        /* Triangle */
+        content: '';
+        position: absolute;
+        left: 46px; /* Adjust based on block width */
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: calc(40px * .60) solid $teal-900; /* Adjust based on the height */
+        border-top: calc(40px / 2 - 2px) solid transparent;
+        border-bottom: calc(40px / 2 - 2px) solid transparent;
+    }
+    
+    &.slim {
+      margin-top: 0px;
+      margin-bottom: 10px;
+    }
+}
+
+h5, h6 {
+  display: inline-block;
+  font-size: 20px !important;
+  vertical-align: middle;
+}
+
+h6 {
+    background: #FFFFFF;
+    color: $teal-900;
+    border: 2px solid $teal-900;
+}
+
+.box-of-map {
+  position: -webkit-sticky !important; /* Safari */
+  position: sticky !important;
+  top: 75px; /* Set to the top of the container */
+  z-index: 100; /* Ensure it sits above other content */
+}
+
+.dataTables_wrapper {
+  // overflow: auto;
+  border: 4px solid $teal-900;
+  border-radius: 10px 10px 5px 5px;
+
+
+  .dataTable {
+
+    .last-row {
+      background-color: $teal-900;
+    }
+
+    overflow: hidden;
+
+    tbody tr:hover {
+      background-color: rgba(4, 45, 51, 0.1);
+    }
+
+    thead th:hover {
+      color: #FFF; /* This sets the text color to white; adjust as needed */
+      cursor: pointer; /* Makes it clear to users they can interact with the headers */
+    }
+
+    th, td {
+      font-family: "Poppins", sans-serif;
+      // font-weight: bold;
+      text-align: left;
+      // border-radius: 15px;
+    }
+
+    .th-hover-effect {
+      color: rgba(4, 45, 51, 0.05); /* teal-900 at 5% opacity */
+    }
+
+    td {
+      font-size: 15px;
+      padding-left: 15px;
+    }
+
+    th {
+      background-color: $teal-900;
+      color: #FFFFFF;
+      line-height: 1.2;
+      font-style: none;
+      font-variant: small-caps;
+      // border-radius: 15px;
+    }
+
+    // tr:nth-child(odd) {
+    //  background-color: $gray-100;
+    // }
+  }
+
+}
+
+.table>:not(:first-child) {
+    border-top: 0 !important;
+}
+
+
+.indent {
+  margin-left: 65px;
+}
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.grid-link {
+  text-decoration: none !important;
+  border: none;
+  background-color: $teal-900;
+  color: white;
+  border-radius: 15px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin: 10px;
+  padding: 10px;
+  
+  p {
+    position: relative;
+    font-weight: $headings-font-weight;
+    font-family: $headings-font-family;
+    color: #FFFFFF;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 80px !important;
+    margin: 0;
+    padding: 5px;
+    line-height: 0;
+  }
+  
+  span {
+    font-size: 20px !important;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.grid-item-empty {
+  background-color: $teal-900;
+  color: white;
+  border-radius: 15px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  
+}
+
+.grid-link.hovered {
+  background-color: $teal-700; /* Update to the lighter teal color when hovered */
+  p {
+    transform: scale(1.05); // Increase icon size on hover
+  }
+}
+
+a[role="button"] {
+  text-decoration: none;
+}
+
+i.bi-chevron-up {
+  display:inline-block;
+}
+
+a[aria-expanded="false"] {
+  i.bi-chevron-up {
+    transition: transform 0.3s ease;
+    transform: rotate(180deg) !important;
+  }
+}
+
+a[aria-expanded="true"] {
+  i.bi-chevron-up {
+    transition: transform 0.3s ease;
+    transform: rotate(0deg) !important;
+  }
+}
+
+.button-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.button-content-details {
+  display: flex;
+  max-height: 0;
+  overflow: hidden;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  transition: max-height 0.75s ease-out; /* Adjust time as needed */
+}
+
+.list-group-item[aria-expanded="true"] .button-content-details {
+  max-height: 1000px; /* Adjust max-height based on content size */
+  /* Keep the display:flex for layout, but it won't affect the transition */
+  display: flex; 
+}
+
+.left-content {
+  flex: 1;
+  text-align: left;
+}
+
+.left-content-indent {
+  flex: 1;
+  text-align: left;
+  text-indent: 7.5%;
+}
+
+.right-content {
+  flex: 1;
+  text-align: right;
+  font-weight: bold;
+}
+
+.right-chevron-down {
+  flex: 1;
+  text-align: right;
+  font-weight: bold;
+}
+
+.button-content hr {
+  width: 100%;
+}
+
+.button-content br {
+  width: 100%;
+  content: '';
+}
+
+.list-group-item {
+  white-space: normal; /* Allow text to wrap to the next line if necessary */
+}
+
+
+// Mermaid Theme;
+
+$mermaid-bg-color: $body-bg;
+$mermaid-edge-color: $teal-700;
+$mermaid-node-fg-color: $body-color;
+$mermaid-fg-color: $body-color;
+$mermaid-fg-color--lighter: lighten($body-color, 10%);
+$mermaid-fg-color--lightest: lighten($body-color, 20%);
+$mermaid-font-family: $font-family-sans-serif;
+$mermaid-label-bg-color: $body-bg;
+$mermaid-label-fg-color: $primary;
+$mermaid-node-bg-color: rgba($primary, 0.1);
+$mermaid-node-fg-color: $primary;
